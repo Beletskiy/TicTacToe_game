@@ -45,7 +45,8 @@ function createField(w,h){
             td.appendChild(img);
             img.setAttribute('id', 'c'+i+'_'+j);
             img.setAttribute('src', 'img/c_null.gif');
-            img.setAttribute('alt', '');
+            img.setAttribute('alt', ' ');
+         /*   img.addEventListener("click", onCellClick(i,j)); */
         }
     }
 
