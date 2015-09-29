@@ -31,6 +31,24 @@ function createField(w,h){
         gameField+="</tr>";
     }
     document.getElementById('gameField').innerHTML = gameField+"</table>"; */
+    var table = document.createElement('table');
+    gameField.appendChild(table);
+
+    for (var i=0; i<w; i++) {
+        var tr = document.createElement('tr');
+        table.appendChild(tr);
+        for (var j=0; j<h; j++) {
+            var td = document.createElement('td');
+            tr.appendChild(td);
+
+            var img = document.createElement('img');
+            td.appendChild(img);
+            img.setAttribute('id', 'c'+i+'_'+j);
+            img.setAttribute('src', 'img/c_null.gif');
+            img.setAttribute('alt', '');
+        }
+    }
+
 }
 
 function onCellClick(x,y) {
