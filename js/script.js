@@ -45,13 +45,21 @@ function setCell(x,y,player) {
     var picName="c"+x+"_"+y; // create picture name
     document.getElementById(picName).src = imgsrc;
 }
+// test
+// test
+// test
+// test
+// test
+// test
+// test
+// test
 
 function isWin() {
     // check areas 3 x 3
     for ( curX=0 ; curX<=gFieldArr.length-3 ; curX++) {
         for (curY = 0; curY <= gFieldArr[0].length - 3; curY++) {  // If the size of the field more than 3.
 
-            // ------------------check the diagonals--------------------------
+            // ------------------check the diagonals---------------------------
             var whoWin = gFieldArr[curX][curY];
             if (whoWin != null) for (i = 0; i < 3; i++) if (gFieldArr[i + curX][i + curY] != whoWin) whoWin = null;
             if (whoWin != null) return whoWin; // if somebody win
@@ -77,6 +85,7 @@ function isWin() {
     return false; // If no one wins
 }
 
+//test
 function compGame() {
     z = 0;
     while (z == 0) {
