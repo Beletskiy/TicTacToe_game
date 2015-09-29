@@ -49,10 +49,6 @@ function setCell(x,y,player) {
 // test
 // test
 // test
-// test
-// test
-// test
-// test
 
 function isWin() {
     // check areas 3 x 3
