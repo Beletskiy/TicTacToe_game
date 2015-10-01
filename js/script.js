@@ -1,6 +1,6 @@
 // todo rewrite to object-style
 
-function Game () {
+function Game () { // function constructor
     this.field = null;
 }
 
@@ -40,23 +40,67 @@ function createField(w,h){
             img.setAttribute('id', 'c_'+i+'_'+j);
             img.setAttribute('src', 'img/blank.png');
             img.setAttribute('alt', ' ');
-            img.addEventListener("click", function(e){
-                // var 1
-                var el = e.currentTarget,
-                    id = el.getAttribute('id'),
-                    parts = id.split('_'),
-                    x = parts[1],
-                    y = parts[2];
+            //function saveX() {
+            //    var x = i;
+            //    return x;
+            //}
+            //function saveY() {
+            //    var y = j;
+            //    return y;
+            //}
 
-                // var 2
-             //   var x = i,
-              //      y = j;
-                onCellClick(x, y);
-            } );
+            (function () {
+                // todo anonymous functions
+                // todo self-invoking functions
+                var x = i;
+                var y = j;
+                img.addEventListener("click", function(e){
+                    // var 1
+                    /*   var el = e.currentTarget,
+                     id = el.getAttribute('id'),
+                     parts = id.split('_'),
+                     x = parts[1],
+                     y = parts[2]; */
+
+                    // var 2
+
+                    console.log('test', x, y);
+                    onCellClick(x,y);
+                } );
+            })();
+
+
+
         }
     }
 
 }
+
+var t = [
+    [1,0,2],
+    [0,1,2],
+    [2,0,1]
+];
+
+var verticals = [],
+    horizontals = [],
+    diagonals = []
+
+for (var i = 0; i < t.length; i++) {
+    var obj = t[i];
+
+    verticals.push('');
+    horizontals.push('');
+    diagonals.push('');
+
+
+
+    for (var j = 0; j < obj.length; j++) {
+        var val = obj[j];
+
+    }
+}
+
 
 function onCellClick(x,y) {
         // todo naming --------------------------ready---------------
@@ -153,6 +197,21 @@ function isWin() {
         }
     }
     return false; // If no one wins
+}
+
+function isBuiltFromOneSymbol (str) {
+    var letter, firstLetter = str[0], result = true;
+    for (var i = 0; i < str.length; i++) {
+        letter = str[i];
+        if (letter != firstLetter) {
+            result = false;
+        }
+    }
+    if (result) {
+        return firstLetter;
+    } else {
+        return null;
+    }
 }
 
 function compMove() {
