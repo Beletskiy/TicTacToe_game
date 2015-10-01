@@ -19,8 +19,6 @@ function createField(w,h){
             gFieldArr[a][b] = 0;
         }
     }
-
-
     // todo document.createElement ------------------ready-------
     // todo document.createFragment
     // todo setAttribute --------------------ready---------------
@@ -41,7 +39,6 @@ function createField(w,h){
             td.appendChild(img);
             img.setAttribute('id', 'c_'+i+'_'+j);
             img.setAttribute('src', 'img/blank.png');
-            //img.classList.add('blank');
             img.setAttribute('alt', ' ');
             img.addEventListener("click", function(e){
                 // var 1
@@ -62,8 +59,6 @@ function createField(w,h){
 }
 
 function onCellClick(x,y) {
-    //if (typeof gFieldArr[x][y] == 'string') {
-    //if (!!gFieldArr[x][y]) {
         // todo naming --------------------------ready---------------
         // todo remove redundant if's --------------ready------------
         // todo naming ----------------------------ready-------------
@@ -85,99 +80,76 @@ function setCell(x,y,player) {
     gFieldArr[x][y]=player;
     var picName="c_"+x+"_"+y; // create picture name
     if (player == 'x') {
-        document.getElementById(picName).classList.remove("blank");
         document.getElementById(picName).classList.add("tic");
     }
     if (player == 'o') {
-        document.getElementById(picName).classList.remove("blank");
         document.getElementById(picName).classList.add("toe");
     }
     return true;
 }
 
 function isWin() {
-    // todo refactor & reformat
-    // todo move all checks to one cycle
-    // check areas 3 x 3
+    // todo refactor & reformat -------------------ready--------------
+    // todo move all checks to one cycle ----------ready--------------
+    /* check areas 3 x 3 */
     var curX = 0,
         curY = 0,
-        whoWin;
+        whoWin = 0,
+        diagonal = '',
+        reverseDiagonal = '',
+        vertical = '',
+        vertical1 = '',
+        vertical2 = '',
+        vertical3 = '',
+        horizontal = '',
+        horizontal1 = '',
+        horizontal2 = '',
+        horizontal3 = '';
+
     for (curX = 0 ; curX<=gFieldArr.length-3 ; curX++) {
         for (curY = 0; curY <= gFieldArr[0].length - 3; curY++) {// If the size of the field more than 3.
-            /* whoWin = gFieldArr[curX][curY];
-            if (whoWin != null) {
                 for (var i = 0; i < 3; i++) {
-                    if ((gFieldArr[i + curX][i + curY] != whoWin)&&(gFieldArr[2 - i + curX][2-i + curY] != whoWin)){
-                        whoWin = null;
-                    }
-                    if (whoWin != null) {
-                        return whoWin
-                    }
+                   diagonal += gFieldArr[i + curX][i + curY] ;
+                   reverseDiagonal += gFieldArr[2 - i + curX][i + curY] ;
 
-                    for (var j=0; j<3; j++) {
-                        if ((gFieldArr[i+curX][j+curx] != whoWin)&&(gFieldArr[j+curX][i+curY] != whoWin)) {
-                            whoWin = null;
+                    if (i == 2) {
+                        if ((diagonal == 'xxx')||(reverseDiagonal == 'xxx')){
+                            whoWin = 'x';
+                            return whoWin;
                         }
-                        if (whoWin!=0) {
+                        if ((diagonal == 'ooo')||(reverseDiagonal == 'ooo')){
+                            whoWin = 'o';
                             return whoWin;
                         }
                     }
-                }
-            } */
+                    for (var j=0; j<3; j++) {
+                        vertical += gFieldArr[j + curX][i + curY];
+                        horizontal += gFieldArr[i + curX][j + curY];
 
-            // ------------------check the diagonals---------------------------
-            whoWin = gFieldArr[curX][curY];
-            if (whoWin != null) {
-                for (i = 0; i < 3; i++) {
-                    if (gFieldArr[i + curX][i + curY] != whoWin) {
-                        whoWin = null;
-                    }
-                }
-            }
-            if (whoWin != null) {
-                return whoWin;
-            } // if somebody win
-            whoWin = gFieldArr[2 + curX][curY];
-            if (whoWin != null) {
-                for (i = 0; i < 3; i++) {
-                    if (gFieldArr[2 - i + curX][i + curY] != whoWin) {
-                        whoWin = null;
-                    }
-                }
-            }
-            if (whoWin != null) {
-                return whoWin;
-            }
-            // ------------------ check verticals -----------------------------
+                        if ((i == 2)&&(j == 2)) {
+                            vertical1 = vertical.substr(0,3);
+                            vertical2 = vertical.substr(3,3);
+                            vertical3 = vertical.substr(6,3);
+                            horizontal1 = horizontal.substr(0,3);
+                            horizontal2 = horizontal.substr(3,3);
+                            horizontal3 = horizontal.substr(6,3);
 
-            for (i = 0; i < 3; i++) {
-                whoWin = gFieldArr[curX + i][curY];
-                if (whoWin != null) {
-                    for (j = 0; j < 3; j++) {
-                        if (gFieldArr[i + curX][j + curY] != whoWin) {
-                            whoWin = null;
+                            if ((vertical1 == 'xxx')||(vertical2 == 'xxx')||(vertical3 == 'xxx')||
+                                (horizontal1 == 'xxx')||(horizontal2 == 'xxx')||(horizontal3 == 'xxx')) {
+                                whoWin = 'x';
+                                return whoWin;
+                            }
+                            if ((vertical1 == 'ooo')||(vertical2 == 'ooo')||(vertical3 == 'ooo')||
+                                (horizontal1 == 'ooo')||(horizontal2 == 'ooo')||(horizontal3 == 'ooo')) {
+                                whoWin = 'o';
+                                return whoWin;
+                            }
+
                         }
-                    }
-                }
-                if (whoWin != null) {
-                    return whoWin;
-                }
-            }
 
-            // -------------------check horizontals ----------------------------
-            for (j = 0; j < 3; j++) {
-                whoWin = gFieldArr[curX][curY + j];
-                if (whoWin != null) {
-                    for (i = 0; i < 3; i++) {
-                        if (gFieldArr[i + curX][j + curY] != whoWin) {
-                            whoWin = null;
-                        }
                     }
+
                 }
-                if (whoWin != null) {
-                    return whoWin;
-                }
-            }
         }
     }
     return false; // If no one wins
