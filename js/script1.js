@@ -1,4 +1,4 @@
-// todo rewrite to object-style
+// todo rewrite to object-style --------ready------------
 
 function Game () { // function-constructor
     this.gFieldArr = null;
@@ -7,24 +7,19 @@ function Game () { // function-constructor
 }
 
 Game.prototype.start = function (w, h) {
-    // some code here
     this.width = w;
     this.height = h;
-    //gFieldArr=new Array(this.width);
-    var gFieldArr = [];
+    this.gFieldArr = [];
     for (var a=0; a<this.width; a++) {
-        //gFieldArr[a]=new Array(this.height);
         var t = [];
         for (var b=0; b<this.height; b++){
             t.push(0);
         }
-        gFieldArr.push(t);
+        this.gFieldArr.push(t);
     }
-    console.log(gFieldArr, 'from start ');
     var table = document.createElement('table'),
         tr, td, img,
         self = this;
-
 
     for (var i=0; i<this.width; i++) {
         tr = document.createElement('tr');
@@ -46,30 +41,140 @@ Game.prototype.start = function (w, h) {
                     x = parts[1],
                     y = parts[2];
                 self.onCellClick(x, y);
-                // var 2
-                //   var x = i,
-                //      y = j;
-
             } );
         }
     }
-
     gameField.appendChild(table);
 };
 
 Game.prototype.onCellClick = function (x, y) {
-    console.log('Do it!!!');
-    var winner;
+    var winner,
+        self = this;
     if (typeof this.gFieldArr[x][y] == 'number') {
-        setCell(x, y, 'x');
-        winner = isWin();
+        self.setCell(x, y, 'x');
+        winner = self.isWin();
     }
     if ( !winner ) {
-        compMove(); // start comp game
+        self.compMove(); // start comp game
     } else {
         var mes = winner + ' wins!';
         alert(mes);
     }
+};
+
+Game.prototype.setCell = function (x,y,player) {
+    this.gFieldArr[x][y]=player;
+    var picName="c_"+x+"_"+y; // create picture name
+    if (player == 'x') {
+        document.getElementById(picName).classList.add("tic");
+    }
+    if (player == 'o') {
+        document.getElementById(picName).classList.add("toe");
+    }
+    return true;
+};
+
+Game.prototype.isWin = function () {
+    var curX = 0,
+        curY = 0,
+        verticalsStr ='',
+        horizontalsStr ='',
+        diagonalsStr = '',
+        diagonals = [],
+        verticals = [],
+        horizontals = [];
+
+    for (var c = 0; c < this.width; c++){
+        diagonals[c] = [];
+        verticals[c] = [];
+        horizontals[c] = [];
+        for (var d = 0; d < this.height; d++){
+            diagonals[c][d] = 0;
+            verticals[c][d] = 0;
+            horizontals[c][d] = 0;
+        }
+    }
+
+    function isBuiltFromOneSymbol (str) {
+        var letter,
+            firstLetter = str[0],
+            result = true;
+        if (firstLetter != '0') {
+            for (var i = 0; i < str.length; i++) {
+                letter = str[i];
+                if (letter != firstLetter) {
+                    result = false;
+                }
+            }
+            if (result) {
+                return firstLetter;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    for (curX = 0 ; curX<=this.gFieldArr.length-3 ; curX++) {
+        for (curY = 0; curY <= this.gFieldArr[0].length - 3; curY++) {// --- If the size of the field more than 3.
+            for (var i = 0; i < 3; i++) {
+                diagonals[0][i] = this.gFieldArr[i + curX][i + curY] ;
+                diagonals[1][i] = this.gFieldArr[2 - i + curX][i + curY] ;
+
+                if (i == 2) {
+                   for (var b = 0; b < 2; b++) {
+                        diagonalsStr = diagonals[b].join('');
+                       if (!isBuiltFromOneSymbol(diagonalsStr)) {
+                           continue;
+                       }
+                       return isBuiltFromOneSymbol(diagonalsStr); //whoWin
+                   }
+                }
+                for (var j=0; j<3; j++) {
+                     verticals[i][j] = this.gFieldArr[j + curX][i + curY];
+                     horizontals[i][j] = this.gFieldArr[i + curX][j + curY];
+
+                    if ((i == 2)&&(j == 2)) {
+                        for (var k = 0; k < 3; k++) {
+                            verticalsStr = verticals[k].join('');
+                            horizontalsStr = horizontals[k].join('');
+                            if ((!isBuiltFromOneSymbol(verticalsStr))&&(!isBuiltFromOneSymbol(horizontalsStr))) {
+                                continue;
+                            }
+                            if (isBuiltFromOneSymbol(horizontalsStr)) {
+                                return isBuiltFromOneSymbol(horizontalsStr); //whoWin
+                            } else {
+                                return isBuiltFromOneSymbol(verticalsStr); //whoWin
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false; // If no one wins
+};
+Game.prototype.compMove = function () {
+    var z = 0,
+        x = 0,
+        y = 0,
+        self = this,
+        winner;
+    while (z == 0) {
+        x = self.getRand(0, this.width - 1);
+        y = self.getRand(0, this.height -1);
+        if (typeof this.gFieldArr[x][y] == 'number') {
+            self.setCell(x, y, 'o');
+            z++;
+            winner = self.isWin();
+            if (winner) {
+                var mes = winner + ' wins!';
+                alert(mes);
+            }
+        }
+    }
+};
+Game.prototype.getRand = function (min,max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 };
 var game = new Game();
 game.start(3,3);
