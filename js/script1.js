@@ -82,6 +82,7 @@ Game.prototype.isWin = function () {
         diagonalsStr = '',
         diagonals = [],
         verticals = [],
+        self = this,
         horizontals = [];
 
     for (var c = 0; c < this.width; c++){
@@ -94,25 +95,15 @@ Game.prototype.isWin = function () {
             horizontals[c][d] = 0;
         }
     }
-
-    function isBuiltFromOneSymbol (str) {
-        var letter,
-            firstLetter = str[0],
-            result = true;
-        if (firstLetter != '0') {
-            for (var i = 0; i < str.length; i++) {
-                letter = str[i];
-                if (letter != firstLetter) {
-                    result = false;
-                }
-            }
-            if (result) {
-                return firstLetter;
-            } else {
-                return null;
-            }
+ /*   for (var c=0; c<this.width; c++) {
+        var tt = [];
+        for (var d=0; d<this.height; d++){
+            tt.push(0);
         }
-    }
+        diagonals.push(tt);
+        verticals.push(tt);
+        horizontals.push(tt);
+    } */
 
     for (curX = 0 ; curX<=this.gFieldArr.length-3 ; curX++) {
         for (curY = 0; curY <= this.gFieldArr[0].length - 3; curY++) {// --- If the size of the field more than 3.
@@ -122,11 +113,13 @@ Game.prototype.isWin = function () {
 
                 if (i == 2) {
                    for (var b = 0; b < 2; b++) {
-                        diagonalsStr = diagonals[b].join('');
-                       if (!isBuiltFromOneSymbol(diagonalsStr)) {
+                       diagonalsStr = diagonals[b].join('');
+                       var whoWin = self.isBuiltFromOneSymbol(diagonalsStr);
+
+                       if (!whoWin) {
                            continue;
                        }
-                       return isBuiltFromOneSymbol(diagonalsStr); //whoWin
+                       return whoWin; //whoWin
                    }
                 }
                 for (var j=0; j<3; j++) {
@@ -137,13 +130,15 @@ Game.prototype.isWin = function () {
                         for (var k = 0; k < 3; k++) {
                             verticalsStr = verticals[k].join('');
                             horizontalsStr = horizontals[k].join('');
-                            if ((!isBuiltFromOneSymbol(verticalsStr))&&(!isBuiltFromOneSymbol(horizontalsStr))) {
+                            var whoWin1 = self.isBuiltFromOneSymbol(verticalsStr);
+                            var whoWin2 = self.isBuiltFromOneSymbol(horizontalsStr);
+                            if ((!whoWin1)&&(!whoWin2)) {
                                 continue;
                             }
-                            if (isBuiltFromOneSymbol(horizontalsStr)) {
-                                return isBuiltFromOneSymbol(horizontalsStr); //whoWin
+                            if (whoWin1) {
+                                return whoWin1; //whoWin
                             } else {
-                                return isBuiltFromOneSymbol(verticalsStr); //whoWin
+                                return whoWin2; //whoWin
                             }
                         }
                     }
@@ -176,8 +171,38 @@ Game.prototype.compMove = function () {
 Game.prototype.getRand = function (min,max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
+Game.prototype.isBuiltFromOneSymbol = function (str) {
+    var letter,
+        firstLetter = str[0],
+        result = true;
+    if (firstLetter != '0') {
+        for (var i = 0; i < str.length; i++) {
+            letter = str[i];
+            if (letter != firstLetter) {
+                result = false;
+            }
+        }
+        if (result) {
+            return firstLetter;
+        } else {
+            return null;
+        }
+    }
+};
+
 var game = new Game();
 game.start(3,3);
 
+/*function Game () {
+    this.drawer = new HTMLDrawer();
+    //this.drawer = new CanvasDrawer();
+    // this.drawer.drawField (this.field)
+}
 
+function HTMLDrawer () {
 
+}
+
+function CanvasDrawer () {
+
+} */
